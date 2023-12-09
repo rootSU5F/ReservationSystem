@@ -4,19 +4,27 @@ import java.time.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 
-public class KkuSystem implements FileNames, ReserveTasks{
-	
+public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks {
+
 
 	static List<ReserveBlock> reservations = new ArrayList<>();
 	static People people = new People();
-	
-	
+
+
 	public void showCLIMenu() {
-		
+
 		load(); //load previous data
-		Person p; LocalDate l; int t; Room r; boolean st; Scanner sc = new Scanner(System.in); String s;
+		Person p;
+		LocalDate l;
+		//this variable to determine the exception case in switch
+		int whichCase =0;
+		int t;
+		Room r;
+		boolean st;
+		Scanner sc = new Scanner(System.in);
+		String s;
 		String timeStamp = new SimpleDateFormat("yyyy-MM-dd | HH:mm:ss").format(Calendar.getInstance().getTime());
-		while(true) {
+		while (true) {
 			System.out.println("\n\n\nWelcome to KKU LAB Managament System");
 			System.out.println(timeStamp);
 			System.out.println("=================================================");
@@ -29,77 +37,115 @@ public class KkuSystem implements FileNames, ReserveTasks{
 			System.out.println("7. Create New User");
 			System.out.println("8. Print all users on screen");
 			System.out.println("9. Remove User");
+			System.out.println("10. Find Reserved Blocks By Person ");
 			System.out.print("\nPlease Enter a number:");
 			s = sc.next();
-			switch(s) {
-			case "1":
-				System.out.println("Enter person name, id, age (press Enter after each):");
-				p = new Person(sc.next(),sc.next(),sc.nextInt());
-				people.addPerson(p);
-				System.out.println("Enter room name:");
-				r = new LabRoom(sc.next());
-				System.out.println("Enter Date in yyyy-mm-dd:");
-				l=LocalDate.parse(sc.next());
-				System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
-				t=sc.nextInt();
-				st=this.reserveBlock(new ReserveBlock(p,l,t,r));
-				break;
-				
-				
-			case "2":
-				System.out.println("Not working. Please remove and Add again.");
-				break;
-				
-				
-			case "3":
-				this.printReservedBlocks(reservations);
-				break;
-				
-				
-			case "4":
-				this.exportToFile2();
-				break;
-				
-				
-			case "5":
-				sc.close();
-				System.out.println("Saving...");
-				save();
-				System.out.println("Thank you.");
-				System.exit(0);
-				
-			case "6":
-				p = new Person("test","test",0);
-				System.out.println("Enter room name:");
-				r = new LabRoom(sc.next());
-				System.out.println("Enter Date in yyyy-mm-dd:");
-				l=LocalDate.parse(sc.next());
-				System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
-				t=sc.nextInt();
-				st=this.removeBlock(new ReserveBlock(null,l,t,r));
-				break;
-			
-			case "7":
-				System.out.println("Enter person name, id, age (press Enter after each):");
-				people.addPerson(sc.next(), sc.next(), sc.nextInt());
-				break;
-				
-			case "8":
-				people.printPeople();
-				break;
-				
-			case "9":
-				System.out.println("Enter user id to remove:");
-				people.removePerson(sc.next());
-				break;
-			
-			default:
-				System.err.println("Wrong choice!\n");
-				
+
+			switch (s) {
+
+				case "1":
+					try {
+						System.out.println("Enter person name, id, age (press Enter after each):");
+						p = new Person(sc.next(), sc.next(), sc.nextInt());
+						//if it is increases that is mean the age is assigned flawless :]
+						whichCase+=1;
+						people.addPerson(p);
+						System.out.println("Enter room name:");
+						r = new LabRoom(sc.next());
+						System.out.println("Enter Date in yyyy-mm-dd:");
+						l = LocalDate.parse(sc.next());
+						System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
+						t = sc.nextInt();
+						while (t >24){
+							System.out.println("Dude it is just 24 hour per day enter it serious : ");
+							t=sc.nextInt();
+						}
+						st = this.reserveBlock(new ReserveBlock(p, l, t, r));
+					}catch(java.time.format.DateTimeParseException e){
+						System.out.println("Wrong date format ! please enter it in this format : yyyy-mm-dd \nLike this 2023-09-01 ");
+					}catch (java.util.InputMismatchException e ){
+						/*this if condition to check which case is causes the exception
+						if it is 1 then the error in age
+						else in the hours
+						I feel genius <3
+						*/
+						if(whichCase == 0){
+							System.out.println("Dude i dont ask for your life story ,give me a number !!!! ");
+						}
+						else
+							System.out.println("Enter the hours as an integer pls ");
+					}
+
+
+					break;
+
+
+				case "2":
+					System.out.println("Not working. Please remove and Add again.");
+					break;
+
+
+				case "3":
+					this.printReservedBlocks(reservations);
+					break;
+
+
+				case "4":
+					this.exportToFile2();
+					break;
+
+
+				case "5":
+					sc.close();
+					System.out.println("Saving...");
+					save();
+					System.out.println("Thank you.");
+					System.exit(0);
+
+				case "6":
+					p = new Person("test", "test", 0);
+					System.out.println("Enter room name:");
+					r = new LabRoom(sc.next());
+					System.out.println("Enter Date in yyyy-mm-dd:");
+					l = LocalDate.parse(sc.next());
+					System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
+					t = sc.nextInt();
+					st = this.removeBlock(new ReserveBlock(null, l, t, r));
+					break;
+
+				case "7":
+					System.out.println("Enter person name, id, age (press Enter after each):");
+					people.addPerson(sc.next(), sc.next(), sc.nextInt());
+					break;
+
+				case "8":
+					people.printPeople();
+					break;
+
+				case "9":
+					System.out.println("Enter user id to remove:");
+					people.removePerson(sc.next());
+					break;
+
+				case "10":
+					try {
+						System.out.println("Enter person name, id, age (press Enter after each):");
+						p = new Person(sc.next(), sc.next(), sc.nextInt());
+						System.out.println(findReservedBlocksBy(p));
+						break;
+					//	System.out.println(reservations);
+
+					}catch (java.util.InputMismatchException e ){
+						System.out.println("Dude i dont ask for person's life story ,I NEED A NUMBER !");
+						break;
+					}
+
+				default:
+					System.err.println("Wrong choice!\n");
+
 			}
-		}
-		
 	}
+}
 	public static void main(String args[]) {
 		reservations.add(new ReserveBlock(new Person("Ahmad","0",0),LocalDate.parse("2023-12-12"),12,new LabRoom("18S")));
 		//String s = sc.next();
@@ -332,4 +378,13 @@ public class KkuSystem implements FileNames, ReserveTasks{
 		}
 	}
 
+	@Override
+	public List<ReserveBlock> findReservedBlocksBy(Person p) {
+		List<ReserveBlock> blocksByPerson = new ArrayList<ReserveBlock>();
+		for(ReserveBlock block : reservations){
+			if(block.getBy().equals(p) )
+				blocksByPerson.add(block);
+		}
+		return blocksByPerson;
+	}
 }

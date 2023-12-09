@@ -44,6 +44,10 @@ public class Person  implements Serializable{
 	public void setBlocked(boolean blocked) {
 	this.blocked = blocked;
 	}
-
-
+	//overriding the equals method to implement the
+	public boolean equals(Person person){
+		//two people with the same ID is impossible ! ;]
+	if (this.id.equals(person.getId())){return true;}
+	else return false;
+	}
 }
