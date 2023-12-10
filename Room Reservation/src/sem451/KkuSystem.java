@@ -113,7 +113,7 @@ public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks 
 					l = LocalDate.parse(sc.next());
 					System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
 					t = sc.nextInt();
-					while (t >25 ){
+					while (t >24 ){
 						System.out.println("there is only 24 hours per day !!!");
 						t= sc.nextInt();
 					}
