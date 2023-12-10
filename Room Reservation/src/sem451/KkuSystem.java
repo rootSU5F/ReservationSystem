@@ -63,6 +63,7 @@ public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks 
 						st = this.reserveBlock(new ReserveBlock(p, l, t, r));
 					}catch(java.time.format.DateTimeParseException e){
 						System.out.println("Wrong date format ! please enter it in this format : yyyy-mm-dd \nLike this 2023-09-01 ");
+						break;
 					}catch (java.util.InputMismatchException e ){
 						/*this if condition to check which case is causes the exception
 						if it is 1 then the error in age
@@ -74,6 +75,7 @@ public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks 
 						}
 						else
 							System.out.println("Enter the hours as an integer pls ");
+						break;
 					}
 
 
@@ -103,6 +105,7 @@ public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks 
 					System.exit(0);
 
 				case "6":
+					try{
 					p = new Person("test", "test", 0);
 					System.out.println("Enter room name:");
 					r = new LabRoom(sc.next());
@@ -110,7 +113,19 @@ public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks 
 					l = LocalDate.parse(sc.next());
 					System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
 					t = sc.nextInt();
+					while (t >25 ){
+						System.out.println("there is only 24 hours per day !!!");
+						t= sc.nextInt();
+					}
 					st = this.removeBlock(new ReserveBlock(null, l, t, r));
+					}catch (java.time.format.DateTimeParseException e){
+						System.out.println("Wrong date format ! please enter it in this format : yyyy-mm-dd \nLike this 2023-09-01 ");
+						break;
+					}catch (java.util.InputMismatchException e){
+						System.out.println("Enter the hours as an integer pls");
+						break;
+					}
+
 					break;
 
 				case "7":
