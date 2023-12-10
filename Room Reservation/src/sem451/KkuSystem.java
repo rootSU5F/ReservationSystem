@@ -129,9 +129,14 @@ public class KkuSystem implements FileNames, ReserveTasks ,OptionalReserveTasks 
 					break;
 
 				case "7":
-					System.out.println("Enter person name, id, age (press Enter after each):");
-					people.addPerson(sc.next(), sc.next(), sc.nextInt());
-					break;
+					try {
+						System.out.println("Enter person name, id, age (press Enter after each):");
+						people.addPerson(sc.next(), sc.next(), sc.nextInt());
+						break;
+					}catch (java.util.InputMismatchException e){
+						System.out.println("Enter the hours as an integer pls");
+						break;
+					}
 
 				case "8":
 					people.printPeople();
